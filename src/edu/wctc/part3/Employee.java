@@ -8,36 +8,37 @@ import java.time.format.DateTimeFormatter;
 /**
  * In this lab focus on CLASS Encapsulation and the Single Responsibility
  * Principle (SRP) and fix/add code as necessary.
- *
+ * <p>
  * Pay special attention to the following issues:
- *
+ * <p>
  * 1. It is not the job of this class or any of the methods in this class to
  * do output. So you must remove the System.out.println statements. But we
  * still need output. What to do?
- *
+ * <p>
  * Delegate that work to a new object that IS responsible for output. Create an
  * output service class and have the employee object talk to that object to
  * perform the output. Using a separate class inside another like this is a form
  * of class encapsulation -- hiding a class within another class.
- *
+ * <p>
  * Notice how you can easily change the way output is done, going from console
  * output to JOptionPane output if desired without the Employee object knowing
  * about the change. Flexible!
- *
+ * <p>
  * 2. When doing method validation we have a similar problem. It is not the job
  * of this class or any of its methods to do output. But error messages aren't a
  * reporting issue. Error messages can be produced from invalid data in any
  * program, whether or not those programs have reporting services.
- *
+ * <p>
  * So we need a different approach. The right thing to do is to create an
  * exception that notifies the user that a validation error has happened. An
  * example of this is provided in the setFirstName() method. Mimic this behavior
  * in other setter methods.
- *
+ * <p>
  * Review the tips in the Encapsulation Checklist document if needed.
  */
 public class Employee {
 
+    private final CommandLineOutputService output = new CommandLineOutputService();
     private String firstName;
     private String lastName;
     private String ssn;
@@ -47,24 +48,12 @@ public class Employee {
     private boolean movedIn;
     private String cubeId;
     private LocalDate orientationDate;
-    private final CommandLineOutputService output = new CommandLineOutputService();
 
     public Employee(String firstName, String lastName, String ssn) {
         // Using setter method guarantees validation will be performed
         setFirstName(firstName);
         setLastName(lastName);
         setSsn(ssn);
-    }
-
-    /*
-        This should be private because it is useful only to this class and then,
-        only as a helper method to other methods. This is method hiding - a type
-        of encapsulation where we put frequently used code in one place for easy
-        reuse and editing.
-     */
-    private String getFormattedDate() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy");
-        return formatter.format(orientationDate);
     }
 
     /*
@@ -102,7 +91,7 @@ public class Employee {
     // doFirstTimeOrientation()
     private void meetDepartmentStaff() {
         metDeptStaff = true;
-        System.out.println(firstName + " " + lastName + " met with dept staff on "
+        output.simpleOutput(firstName + " " + lastName + " met with dept staff on "
                 + getFormattedDate());
     }
 
@@ -111,7 +100,7 @@ public class Employee {
     // independently from other classes.
     public void reviewDeptPolicies() {
         reviewedDeptPolicies = true;
-        System.out.println(firstName + " " + lastName + " reviewed dept policies on "
+        output.simpleOutput(firstName + " " + lastName + " reviewed dept policies on "
                 + getFormattedDate());
     }
 
@@ -122,8 +111,19 @@ public class Employee {
         setCubeId(cubeId);
 
         this.movedIn = true;
-        System.out.println(firstName + " " + lastName + " moved into cubicle "
+        output.simpleOutput(firstName + " " + lastName + " moved into cubicle "
                 + cubeId + " on " + getFormattedDate());
+    }
+
+    /*
+        This should be private because it is useful only to this class and then,
+        only as a helper method to other methods. This is method hiding - a type
+        of encapsulation where we put frequently used code in one place for easy
+        reuse and editing.
+     */
+    private String getFormattedDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy");
+        return formatter.format(orientationDate);
     }
 
     public String getFirstName() {
@@ -158,7 +158,7 @@ public class Employee {
 
     public void setSsn(String ssn) {
         if (ssn == null || ssn.length() < 9 || ssn.length() > 11) { // Magic numbers!
-            System.out.println("ssn is required and must be "
+            output.simpleOutput("ssn is required and must be "
                     + "between 9 and 11 characters (if hyphens are used)");
         }
         this.ssn = ssn;
@@ -186,7 +186,7 @@ public class Employee {
 
     public void setCubeId(String cubeId) {
         if (cubeId == null || cubeId.isBlank()) {
-            System.out.println("cube id is required");
+            output.simpleOutput("cube id is required");
         }
         this.cubeId = cubeId;
     }

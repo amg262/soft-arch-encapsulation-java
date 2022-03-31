@@ -8,18 +8,18 @@ import java.time.format.DateTimeFormatter;
 /**
  * In this lab focus on METHOD encapsulation and fix/add code as necessary.
  * Pay special attention to the following issues:
- *
+ * <p>
  * 1. Not all methods need to be public
- *
+ * <p>
  * 2. When methods need to be called in a certain order you can do this
  * by creating a parent method that calls the other, helper methods.
- *
+ * <p>
  * 3. There is some duplicate code used that violates the D.R.Y. principle.
  * Eliminate that by encapsulating the duplicate code in a new method
  * and then call that method in place of the duplicate code.
- *
+ * <p>
  * 4. All method parameters should be validated (except booleans).
- *
+ * <p>
  * Review the tips in the document Encapsulation Checklist if needed.
  */
 public class Employee {
@@ -39,55 +39,65 @@ public class Employee {
         this.ssn = ssn;
     }
 
+    public void setUpEmployee() {
+        meetWithHrForBenefitAndSalaryInfo();
+        meetDepartmentStaff();
+        reviewDeptPolicies();
+        moveIntoCubicle(this.cubeId);
+    }
+
     // Assume this must be performed first, and assume that an employee
     // would only do this once, upon being hired.
-    public void meetWithHrForBenefitAndSalaryInfo() {
+    private void meetWithHrForBenefitAndSalaryInfo() {
         metWithHr = true;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy");
-        String fmtDate = formatter.format(orientationDate);
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy");
+//        String fmtDate = formatter.format(orientationDate);
         System.out.println(firstName + " " + lastName + " met with HR on "
-                + fmtDate);
+                + dateFormatter(orientationDate));
     }
 
     // Assume this must be performed second, and assume that an employee
     // would only do this once, upon being hired.
-    public void meetDepartmentStaff() {
+    private void meetDepartmentStaff() {
         metDeptStaff = true;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy");
-        String fmtDate = formatter.format(orientationDate);
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy");
+//        String fmtDate = formatter.format(orientationDate);
         System.out.println(firstName + " " + lastName + " met with dept staff on "
-                + fmtDate);
+                + dateFormatter(orientationDate));
     }
 
     // Assume this must be performed third. And assume that because department
     // policies may change that this method may need to be called 
     // independently from other classes.
-    public void reviewDeptPolicies() {
+    private void reviewDeptPolicies() {
         reviewedDeptPolicies = true;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy");
-        String fmtDate = formatter.format(orientationDate);
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy");
+//        String fmtDate = formatter.format(orientationDate);
         System.out.println(firstName + " " + lastName + " reviewed dept policies on "
-                + fmtDate);
+                + dateFormatter(orientationDate));
     }
 
     // Assume this must be performed fourth. And assume that because employees
     // sometimes change office locations that this method may need to be called 
     // independently from other classes.
-    public void moveIntoCubicle(String cubeId) {
+    private void moveIntoCubicle(String cubeId) {
         this.cubeId = cubeId;
         this.movedIn = true;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy");
-        String fmtDate = formatter.format(orientationDate);
         System.out.println(firstName + " " + lastName + " moved into cubicle "
-                + cubeId + " on " + fmtDate);
+                + cubeId + " on " + dateFormatter(orientationDate));
     }
 
-    public String getFirstName() {
-        return firstName;
+    private String dateFormatter(LocalDate theDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy");
+        return formatter.format(theDate);
     }
 
     // setter methods give the developer the power to control what data is
     // allowed through validation.
+
+    public String getFirstName() {
+        return firstName;
+    }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
